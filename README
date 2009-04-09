@@ -1,0 +1,27 @@
+MapiaApi
+========
+Documentation http://mapia.ua/api_docs.html
+Introduction goes here.
+
+
+Example
+In controller
+	@map = MapiaApi.new(:zoom=>15, :center=>"ул. Щорса 32а", :lang=>'ru')
+
+	@map = MapiaApi.new(:zoom=>15, :center=>{:lat=>50.45759, :lon=>30.38898}, :lang=>'ru')
+	
+	@map = MapiaApi.new(:zoom=>15, :center=>[50.45759, 30.38898], :lang=>'ru')
+	@map.markers << MapiaApiMarker.new([50.45759, 30.38898], {
+											:map=>@map, 
+											:title=>"My name is Marker", 
+											:note=>'Notes come hre', 
+											:nopopup=>false})
+In view
+	<%= @map.to_html %>
+	<div style="width: 500px; height: 500px;">
+		<%= @map.div %>
+	</div>
+
+
+
+Copyright (c) 2009 [Brainberry], released under the MIT license
