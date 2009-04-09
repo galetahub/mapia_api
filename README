@@ -1,8 +1,14 @@
 MapiaApi
 ========
 Documentation http://mapia.ua/api_docs.html
-Introduction goes here.
+Your can get api key here: http://mapia.ua/apikeys/new
 
+Install
+	./script/plugin install git://github.com/galetahub/mapia_api.git
+
+Config
+	add next line to enviroment.rb with your api key:
+	MAPIA_APPLICATION_KEY = "YOUR API KEY" unless defined? MAPIA_APPLICATION_KEY
 
 Example
 In controller
@@ -21,7 +27,5 @@ In view
 	<div style="width: 500px; height: 500px;">
 		<%= @map.div %>
 	</div>
-
-
 
 Copyright (c) 2009 [Brainberry], released under the MIT license
