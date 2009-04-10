@@ -32,12 +32,16 @@ class MapiaApi
   
   def create_event(type, options={})
   	options.update :map=>self
-  	self.events << MapiaApiEvent.new(type, options)
+  	object = MapiaApiEvent.new(type, options)
+  	self.events << object
+  	object
   end
   
   def create_marker(position, options={})
   	options.update :map=>self
-  	self.markers << MapiaApiMarker.new(position, options)
+  	object = MapiaApiMarker.new(position, options)
+  	self.markers << object
+  	object
   end
   
   # Возвращает координаты центра карты в объекте {lat:... , lon:...}. 
