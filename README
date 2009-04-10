@@ -12,20 +12,39 @@ Config
 
 Example
 In controller
-	@map = MapiaApi.new(:zoom=>15, :center=>"ул. Щорса 32а", :lang=>'ru')
-
+	@map = MapiaApi.new(:zoom=>15, :center=>"YOUR ADDRESS", :lang=>'ru|en')
+	# for exsample: MapiaApi.new(:zoom=>15, :center=>"ул. Щорса 32а", :lang=>'ru')
+	
+	OR
 	@map = MapiaApi.new(:zoom=>15, :center=>{:lat=>50.45759, :lon=>30.38898}, :lang=>'ru')
 	
+	OR
 	@map = MapiaApi.new(:zoom=>15, :center=>[50.45759, 30.38898], :lang=>'ru')
 	@map.markers << MapiaApiMarker.new([50.45759, 30.38898], {
 											:map=>@map, 
 											:title=>"My name is Marker", 
 											:note=>'Notes come hre', 
 											:nopopup=>false})
+	OR
+	@map = MapiaApi.new(:zoom=>15, :center=>'YOUR ADDRESS', :lang=>'ru')
+	@map.events << MapiaApiEvent.new(MapiaApiEvent::GEOCODE_FAILURE, :function=>"alert('Address not found')", :map=>@map)
+	@map.markers << MapiaApiMarker.new(@map.get_center, {:map=>@map, :title=>"My address", 
+											:note=>'YOUR ADDRESS', :nopopup=>false})
+	
+	OR more friendly
+	@map = MapiaApi.new(:zoom=>15, :center=>'YOUR ADDRESS', :lang=>'ru')
+	@map.create_event(MapiaApiEvent::GEOCODE_FAILURE, :function=>"alert('Address not found')")
+	@map.create_marker(@map.get_center, {:title=>"My address", :note=>'YOUR ADDRESS', :nopopup=>false})
+	
+	AND add other javascript
+	@map.js_block = "#{@map.element_id}.setCenter({lat:50.45759, lon:30.38898});"
+	
 In view
 	<%= @map.to_html %>
 	<div style="width: 500px; height: 500px;">
 		<%= @map.div %>
 	</div>
 
-Copyright (c) 2009 [Brainberry], released under the MIT license
+See lib/mapia_api.rb for more details.
+
+Copyright (c) 2009 Brainberry, released under the MIT license

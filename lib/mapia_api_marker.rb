@@ -30,8 +30,8 @@ class MapiaApiMarker
     
     @map = @options.delete(:map)
     @position = position
-    if @position.blank? || !@map || !@map.kind_of?(MapiaApi)
-      raise "Must set position and map for MapiaApi."
+    if !@map || !@map.kind_of?(MapiaApi)
+      raise "Must set map for MapiaApi."
     end
     @element_id = @options.delete(:element_id) || "#{@map.element_id}_marker_#{@map.markers.size + 1}"
     @options[:icon_url] ||= MapiaApiIcon::DEFAULT
@@ -46,9 +46,10 @@ class MapiaApiMarker
   end
   
   def js_position
+  	return "null" if self.position.nil?
   	return "{lat:#{self.position[:lat]}, lon:#{self.position[:lat]}}" if self.position.is_a?(Hash)
   	return "{lat:#{self.position[0]}, lon:#{self.position[1]}}" if self.position.is_a?(Array)
-  	"'#{self.position}'"
+  	self.position.include?("#{@map.element_id}.") ? "#{self.position}" : "'#{self.position}'"
   end
 	
 	def js_options

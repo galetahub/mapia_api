@@ -7,7 +7,9 @@ class MapiaApi
     :zoom,
     :center,
     :lang,
-    :wmode
+    :wmode,
+    :events,
+    :js_block
   
 #  MapiaApi.new(options)
 #
@@ -23,8 +25,30 @@ class MapiaApi
     self.element_id = 'mapia'
     self.markers = []
     self.overlays = []
-  
+  	self.events = []
+  	
     options.each_pair { |key, value| send("#{key}=", value) }
+  end
+  
+  def create_event(type, options={})
+  	options.update :map=>self
+  	self.events << MapiaApiEvent.new(type, options)
+  end
+  
+  def create_marker(position, options={})
+  	options.update :map=>self
+  	self.markers << MapiaApiMarker.new(position, options)
+  end
+  
+  # Возвращает координаты центра карты в объекте {lat:... , lon:...}. 
+  # Этот метод вернет null, если карта еще не инитиализирована
+  def get_center
+  	"#{self.element_id}.getCenter()"
+  end
+  
+  # Возвращает зум карты
+  def get_zoom
+  	"#{self.element_id}.getZoom()"
   end
   
   def to_html
@@ -53,14 +77,10 @@ class MapiaApi
     
     js << "window.onload = function(){"
     js << "#{element_id} = new Mapia('#{element_id}'#{options_js});"
-    js << "center_#{element_id}();"
-        
-    # Put all the markers on the map.
-    markers.each do |marker| 
-      js << ' ' + marker.to_js
-      js << ''
-    end
-    
+    js << "center_#{element_id}();"    
+    js << events_js
+    js << markers_js
+    js << @js_block unless js_block.blank?
     js << "}"
     
     return js.join("\n")
@@ -73,6 +93,24 @@ class MapiaApi
   	js << "wmode: '#{self.wmode}'" if self.wmode
   	
   	",{#{js.join(',')}}" unless js.empty?
+  end
+	
+	def markers_js
+		js = []
+    markers.each do |marker| 
+      js << ' ' + marker.to_js
+      js << ''
+    end
+		js.join
+	end
+	
+  def events_js
+		js = []
+    events.each do |event| 
+      js << ' ' + event.to_js
+      js << ''
+    end
+		js.join
   end
   
   def markers_icons_js
