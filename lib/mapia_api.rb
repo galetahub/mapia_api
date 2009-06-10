@@ -5,6 +5,7 @@ class MapiaApi
     :markers,
     :overlays,
     :zoom,
+    :city_name,
     :center,
     :lang,
     :wmode,
@@ -139,6 +140,7 @@ class MapiaApi
     set_center_js = []
     
     set_center_js << "#{element_id}.setZoom(#{self.zoom});" if self.zoom
+    set_center_js << "#{element_id}.setCity(#{self.city_name.inspect});" if self.city_name
     set_center_js << "#{element_id}.setCenter(#{center_js});" if self.center
     
     "function center_#{element_id}() {\n #{set_center_js.join "\n"}\n}"
